@@ -49,4 +49,4 @@ TTS_VOICE = "nova"
 
 # --- Podcast Host Details (for RSS feed) ---
 AUTHOR_NAME = "Local Podcast Bot"
-AUTHOR_EMAIL = "podcast@example.com"
+AUTHOR_EMAIL = "t.j.wardley2@gmail.com"
