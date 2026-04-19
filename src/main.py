@@ -24,8 +24,8 @@ from script_generator import generate_podcast_script
 from audio_generator import generate_audio
 from rss_updater import update_rss_feed
 
-#from dotenv import load_dotenv
-#load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def main():

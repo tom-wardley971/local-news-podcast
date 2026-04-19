@@ -10,7 +10,7 @@ PODCAST_LANGUAGE = "en"
 
 # Your GitHub Pages URL (after you enable GitHub Pages on the repo)
 # Format: https://<your-github-username>.github.io/<your-repo-name>
-PODCAST_BASE_URL = "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME"
+PODCAST_BASE_URL = "https://tom-wardley971.github.io/local-news-podcast"
 
 # --- Sites to Scrape ---
 # Add as many sites as you like.
