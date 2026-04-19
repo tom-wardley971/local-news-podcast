@@ -37,7 +37,8 @@ def scrape_site(site: dict) -> list[Article]:
     except httpx.HTTPError as e:
         print(f"  ⚠️  Could not fetch {name}: {e}", file=sys.stderr)
         return []
-
+    
+    print(f"Response text: {response.text[:3000]}")
     soup = BeautifulSoup(response.text, "html.parser")
     containers = soup.select(site["article_selector"])
 
