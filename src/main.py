@@ -24,8 +24,8 @@ from script_generator import generate_podcast_script
 from audio_generator import generate_audio
 from rss_updater import update_rss_feed
 
-#from dotenv import load_dotenv
-#load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 def main():
@@ -41,6 +41,7 @@ def main():
         sys.exit(1)
 
     print(f"\n   Total articles collected: {len(articles)}\n")
+    print(articles)
 
     # 2. Generate script
     print("✍️  Step 2: Generating podcast script with Claude...")
@@ -61,7 +62,7 @@ def main():
     # 4. Build the URL where this MP3 will live (GitHub Release asset URL)
     # The workflow uploads the file to a GitHub Release tagged with the date.
     # GitHub Release asset URLs follow this pattern:
-    repo = os.environ.get("GITHUB_REPOSITORY", "YOUR_USERNAME/YOUR_REPO")
+    repo = os.environ.get("GITHUB_REPOSITORY", "tom-wardley971/local-news-podcast")
     mp3_url = (
         f"https://github.com/{repo}/releases/download/{date_str}/{audio_filename}"
     )

@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from typing import Optional
 import sys
+import feedparser
 
 HEADERS = {
     "User-Agent": (
@@ -28,52 +29,18 @@ def scrape_site(site: dict) -> list[Article]:
     """Scrape articles from a single site config."""
     articles = []
     url = site["url"]
+    feed_url = url+"/feed"
     name = site["name"]
 
-    try:
-        response = httpx.get(url, headers=HEADERS, timeout=15, follow_redirects=True)
-        response.raise_for_status()
-        print(f"Status: {response.status_code}")
-    except httpx.HTTPError as e:
-        print(f"  ⚠️  Could not fetch {name}: {e}", file=sys.stderr)
-        return []
-    
-    print(f"Response text: {response.text[:3000]}")
-    soup = BeautifulSoup(response.text, "html.parser")
-    containers = soup.select(site["article_selector"])
+    feed = feedparser.parse(feed_url)
 
-    print(f"Number of articles: {len(containers)}")
-
-    if not containers:
-        print(f"  ⚠️  No elements matched selector '{site['article_selector']}' on {name}")
-        return []
-
-    for container in containers[: site.get("max_articles", 10)]:
-        # Extract headline
-        headline_el = container.select_one(site["headline_selector"])
-        headline = headline_el.get_text(strip=True) if headline_el else ""
-
-        # Extract body text (concatenate all matching paragraphs)
-        body_els = container.select(site["body_selector"])
-        body = " ".join(el.get_text(strip=True) for el in body_els)
-
-        # Try to find a link
-        link_el = container.find("a", href=True)
-        article_url = ""
-        if link_el:
-            href = link_el["href"]
-            article_url = href if href.startswith("http") else url.rstrip("/") + "/" + href.lstrip("/")
-
-        # Skip if no useful content
-        if not headline and not body:
-            continue
-
+    for entry in feed.entries:
         articles.append(
             Article(
                 site_name=name,
-                headline=headline or "(No headline)",
-                body=body[:800],  # Cap body length to keep tokens manageable
-                url=article_url,
+                headline=entry.title or "(No headline)",
+                body=BeautifulSoup(entry.summary, "html.parser").get_text(),  # Cap body length to keep tokens manageable
+                url=entry.link or "No Link",
             )
         )
 
