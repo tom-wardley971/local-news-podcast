@@ -11,7 +11,7 @@ import sys
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (compatible; LocalPodcastBot/1.0; "
-        "+https://github.com/your-username/local-podcast)"
+        "+https://github.com/tom-wardley971/local-news-podcast)"
     )
 }
 
@@ -33,12 +33,15 @@ def scrape_site(site: dict) -> list[Article]:
     try:
         response = httpx.get(url, headers=HEADERS, timeout=15, follow_redirects=True)
         response.raise_for_status()
+        print(f"Status: {response.status_code}")
     except httpx.HTTPError as e:
         print(f"  ⚠️  Could not fetch {name}: {e}", file=sys.stderr)
         return []
 
     soup = BeautifulSoup(response.text, "html.parser")
     containers = soup.select(site["article_selector"])
+
+    print(f"Number of articles: {len(containers)}")
 
     if not containers:
         print(f"  ⚠️  No elements matched selector '{site['article_selector']}' on {name}")
